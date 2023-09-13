@@ -1,0 +1,10 @@
+type CreatedEdition @entity(immutable: true) {
+  id: Bytes!
+  editionId: BigInt! # uint256
+  creator: Bytes! # address
+  editionContractAddress: Bytes! # address
+  tags: String! # string
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
