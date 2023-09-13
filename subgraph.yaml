@@ -6,9 +6,9 @@ dataSources:
     name: EditionFactory
     network: base
     source:
-      address: "0x966a22b5196413f350859f176EA139a2658c5A8c"
       abi: EditionFactory
-      startBlock: 7555840
+      address: "0x966a22b5196413f350859f176EA139a2658c5A8c"
+      startBlock: 2329836
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -18,7 +18,33 @@ dataSources:
       abis:
         - name: EditionFactory
           file: ./abis/EditionFactory.json
+        - name: Edition
+          file: ./abis/Edition.json
+        - name: MultiBatchEdition
+          file: ./abis/MultiBatchEdition.json
+        - name: SingleBatchEdition
+          file: ./abis/SingleBatchEdition.json
       eventHandlers:
         - event: CreatedEdition(indexed uint256,indexed address,address,string)
           handler: handleCreatedEdition
       file: ./src/edition-factory.ts
+templates:
+  - kind: ethereum/contract
+    name: Edition
+    network: base
+    source:
+      abi: Edition
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - FreeNFTBalance
+      abis:
+        - name: Edition
+          file: ./abis/Edition.json
+      eventHandlers:
+        - event: Transfer(indexed address,indexed address,indexed uint256)
+          handler: handleTransfer
+          receipt: true
+      file: ./src/transfers.ts

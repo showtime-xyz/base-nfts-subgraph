@@ -2,6 +2,12 @@
   "base": {
     "EditionFactory": {
       "address": "0x966a22b5196413f350859f176EA139a2658c5A8c",
+      "startBlock": 2329836
+    }
+  },
+  "base-goerli": {
+    "EditionFactory": {
+      "address": "0x966a22b5196413f350859f176EA139a2658c5A8c",
       "startBlock": 7555840
     }
   }
