@@ -20,3 +20,5 @@ export default function handleCreatedEdition(event: CreatedEditionEvent): void {
 
   EditionTemplate.create(collectionAddress);
 }
+
+
