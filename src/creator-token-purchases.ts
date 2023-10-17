@@ -6,7 +6,7 @@ import { CreatorToken, CreatorTokenNft } from "../generated/schema";
 let NULL_ADDRESS = "0x0000000000000000000000000000000000000000";
 
 
-function loadBalance(
+function loadNft(
   creatorToken: CreatorToken,
   ownerAddress: Address,
   tokenId: BigInt,
@@ -18,13 +18,11 @@ function loadBalance(
   if (balance == null) {
     balance = new CreatorTokenNft(id);
 
-    balance.owner = ownerAddress;
     balance.quantity = BigInt.zero();
     balance.creatorToken = creatorToken.id;
   }
 
-  let nft = CreatorTokenNft.load(Bytes.fromHexString(NULL_ADDRESS));
-  store.remove("CreatorTokenNft", NULL_ADDRESS);
+  balance.owner = ownerAddress;
 
   return balance;
 }
@@ -38,7 +36,7 @@ export function handleBought(event: Bought): void {
     return;
   }
 
-  event.params.
+  let owner = event.params.receiver;
 
   let tokenAddress = event.address;
 
@@ -54,7 +52,16 @@ export function handleBought(event: Bought): void {
     return;
   }
 
-  event.params.tokenId
+  let tokenId = event.params.tokenId;
+
+  let nft = loadNft(token, owner, tokenId);
+
+  if (!nft) {
+    return;
+  }
+
+  nft.quantity.plus(BigInt.fromU32(1));
+  nft.save();
 }
 
 export function handleSold(event: Sold): void {
