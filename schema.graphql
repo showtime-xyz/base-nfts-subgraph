@@ -39,7 +39,6 @@ type CreatorToken @entity(immutable: true) {
   nextBuyPrice: BigInt!
   nextSellPrice: BigInt!
 
-  balances: [CreatorTokenBalance!]! @derivedFrom(field: "creatorToken")
   nfts: [CreatorTokenNft!]! @derivedFrom(field: "creatorToken")
 }
 

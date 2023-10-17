@@ -1,15 +1,15 @@
 import { Address, BigInt, Bytes, log, store } from "@graphprotocol/graph-ts";
-import { Bought, Sold } from "../generated/CreatorTokenFactory/CreatorToken";
+import {
+  Bought,
+  CreatorToken as CreatorTokenContract,
+  Sold
+} from "../generated/CreatorTokenFactory/CreatorToken";
 import { CreatorToken, CreatorTokenNft } from "../generated/schema";
-
-
-let NULL_ADDRESS = "0x0000000000000000000000000000000000000000";
-
 
 function loadNft(
   creatorToken: CreatorToken,
   ownerAddress: Address,
-  tokenId: BigInt,
+  tokenId: BigInt
 ): CreatorTokenNft | null {
   let id = creatorToken.id.toHexString() + "-" + tokenId.toString();
 
@@ -18,13 +18,26 @@ function loadNft(
   if (balance == null) {
     balance = new CreatorTokenNft(id);
 
-    balance.quantity = BigInt.zero();
     balance.creatorToken = creatorToken.id;
   }
 
   balance.owner = ownerAddress;
 
   return balance;
+}
+
+function updateNextPricing(token: CreatorToken): void {
+  let creatorTokenContract = CreatorTokenContract.bind(token.id);
+
+  let sellRes = creatorTokenContract.priceToSellNext1();
+  let buyRes = creatorTokenContract.priceToBuyNext();
+
+  token.nextSellPrice = sellRes.value0
+    .plus(sellRes.value1)
+    .plus(sellRes.value2);
+
+  token.nextBuyPrice = buyRes.value0.plus(buyRes.value1).plus(buyRes.value2);
+  token.save();
 }
 
 export function handleBought(event: Bought): void {
@@ -37,6 +50,39 @@ export function handleBought(event: Bought): void {
   }
 
   let owner = event.params.receiver;
+  let tokenAddress = event.address;
+  let token = CreatorToken.load(
+    Bytes.fromHexString(tokenAddress.toHexString())
+  );
+
+  if (token == null) {
+    log.critical("Drop with address {} not found", [
+      tokenAddress.toHexString()
+    ]);
+
+    return;
+  }
+
+  let tokenId = event.params.tokenId;
+  let nft = loadNft(token, owner, tokenId);
+
+  if (!nft) {
+    return;
+  }
+
+  nft.save();
+
+  updateNextPricing(token);
+}
+
+export function handleSold(event: Sold): void {
+  if (!event.address) {
+    log.critical("No contract address in tx {}", [
+      event.transaction.hash.toHex()
+    ]);
+
+    return;
+  }
 
   let tokenAddress = event.address;
 
@@ -53,26 +99,9 @@ export function handleBought(event: Bought): void {
   }
 
   let tokenId = event.params.tokenId;
+  let id = token.id.toHexString() + "-" + tokenId.toString();
 
-  let nft = loadNft(token, owner, tokenId);
+  store.remove("CreatorTokenNft", id);
 
-  if (!nft) {
-    return;
-  }
-
-  nft.quantity.plus(BigInt.fromU32(1));
-  nft.save();
-}
-
-export function handleSold(event: Sold): void {
-  if (!event.address) {
-    log.critical("No contract address in tx {}", [
-      event.transaction.hash.toHex()
-    ]);
-
-    return;
-  }
-
-  let tokenAddress = event.address;
-  store.remove("CreatorTokenNft", tokenAddress.toString());
+  updateNextPricing(token);
 }
