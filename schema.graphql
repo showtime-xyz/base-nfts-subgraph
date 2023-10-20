@@ -27,7 +27,7 @@ type FreeNFTBalance @entity(immutable: false) {
 }
 
 
-type CreatorToken @entity(immutable: true) {
+type CreatorToken @entity(immutable: false) {
   "a creator token is an nft for a creator that can be bought or sold with a deterministic price that follows a bonding curve"
   id: Bytes!
 
