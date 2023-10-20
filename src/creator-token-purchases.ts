@@ -34,7 +34,7 @@ function updateNextPricing(token: CreatorToken): void {
 
   let tryBuyPriceTuple = creatorTokenContract.try_priceToBuyNext()
   if (tryBuyPriceTuple.reverted) {
-    token.nextBuyPrice = BigInt.fromI32(-1);
+    token.nextBuyPrice = null;
   }
 
   else {
@@ -45,12 +45,12 @@ function updateNextPricing(token: CreatorToken): void {
   let trySellPriceTuple = creatorTokenContract.try_priceToSellNext1();
 
   if (trySellPriceTuple.reverted) {
-    token.nextSellPrice = BigInt.fromI32(-1);
+    token.nextSellPrice = null;
   }
 
   else {
     let sellPriceTuple = trySellPriceTuple.value;
-    token.nextSellPrice = sellPriceTuple.value0.plus(sellPriceTuple.value1).plus(sellPriceTuple.value2);
+    token.nextSellPrice = sellPriceTuple.value0.minus(sellPriceTuple.value1).minus(sellPriceTuple.value2);
   }
 
   token.save();
@@ -90,6 +90,7 @@ export function handleBought(event: Bought): void {
 
   nft.save();
 
+  token.updatedAt = event.block.timestamp;
   updateNextPricing(token);
 }
 
@@ -121,5 +122,6 @@ export function handleSold(event: Sold): void {
 
   store.remove("CreatorTokenNft", id);
 
+  token.updatedAt = event.block.timestamp;
   updateNextPricing(token);
 }

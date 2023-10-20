@@ -6,7 +6,7 @@
     },
     "CreatorTokenFactory": {
       "address": "0x264063408fD1bdC703083AE083c813240A024B7f",
-      "startBlock": 10701511
+      "startBlock": 10765956
     }
   },
   "base-goerli": {
@@ -16,7 +16,7 @@
     },
     "CreatorTokenFactory": {
       "address": "0x264063408fD1bdC703083AE083c813240A024B7f",
-      "startBlock": 10701511
+      "startBlock": 10765956
     }
   }
 }

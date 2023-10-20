@@ -12,6 +12,7 @@ export default function handleCreatorToken(event: CreatorTokenDeployed): void {
   let entity = new CreatorToken(tokenAddress);
   entity.creator = event.params.config.creator;
   entity.createdAt = event.block.timestamp;
+  entity.updatedAt = event.block.timestamp;
 
   entity.name = creatorToken.name();
   entity.metadataUrl = creatorToken.tokenURI(BigInt.zero());
@@ -20,7 +21,7 @@ export default function handleCreatorToken(event: CreatorTokenDeployed): void {
 
   let tryBuyPriceTuple = creatorToken.try_priceToBuyNext()
   if (tryBuyPriceTuple.reverted) {
-    entity.nextBuyPrice = BigInt.fromI32(-1);
+    entity.nextBuyPrice = null;
   }
 
   else {
@@ -31,12 +32,12 @@ export default function handleCreatorToken(event: CreatorTokenDeployed): void {
   let trySellPriceTuple = creatorToken.try_priceToSellNext1();
 
   if (trySellPriceTuple.reverted) {
-    entity.nextSellPrice = BigInt.fromI32(-1);
+    entity.nextSellPrice = null;
   }
 
   else {
     let sellPriceTuple = trySellPriceTuple.value;
-    entity.nextSellPrice = sellPriceTuple.value0.plus(sellPriceTuple.value1).plus(sellPriceTuple.value2);
+    entity.nextSellPrice = sellPriceTuple.value0.minus(sellPriceTuple.value1).minus(sellPriceTuple.value2);
   }
 
   entity.save();

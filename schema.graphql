@@ -33,11 +33,12 @@ type CreatorToken @entity(immutable: false) {
 
   creator: Bytes! # address
   createdAt: BigInt! # block timestamp
+  updatedAt: BigInt! # block timestamp
 
   name: String
   metadataUrl: String
-  nextBuyPrice: BigInt!
-  nextSellPrice: BigInt!
+  nextBuyPrice: BigInt
+  nextSellPrice: BigInt
 
   nfts: [CreatorTokenNft!]! @derivedFrom(field: "creatorToken")
 }
