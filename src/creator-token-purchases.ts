@@ -21,6 +21,7 @@ function loadNft(
     balance.creatorToken = creatorToken.id;
   }
 
+  balance.tokenId = tokenId;
   balance.owner = ownerAddress;
 
   return balance;
@@ -29,14 +30,29 @@ function loadNft(
 function updateNextPricing(token: CreatorToken): void {
   let creatorTokenContract = CreatorTokenContract.bind(Address.fromBytes(token.id));
 
-  let sellRes = creatorTokenContract.priceToSellNext1();
-  let buyRes = creatorTokenContract.priceToBuyNext();
+  // Querying for price might revert if you're buying or selling but there's no supply
 
-  token.nextSellPrice = sellRes.value0
-    .plus(sellRes.value1)
-    .plus(sellRes.value2);
+  let tryBuyPriceTuple = creatorTokenContract.try_priceToBuyNext()
+  if (tryBuyPriceTuple.reverted) {
+    token.nextBuyPrice = BigInt.fromI32(-1);
+  }
 
-  token.nextBuyPrice = buyRes.value0.plus(buyRes.value1).plus(buyRes.value2);
+  else {
+    let buyPriceTuple = tryBuyPriceTuple.value;
+    token.nextBuyPrice = buyPriceTuple.value0.plus(buyPriceTuple.value1).plus(buyPriceTuple.value2);
+  }
+
+  let trySellPriceTuple = creatorTokenContract.try_priceToSellNext1();
+
+  if (trySellPriceTuple.reverted) {
+    token.nextSellPrice = BigInt.fromI32(-1);
+  }
+
+  else {
+    let sellPriceTuple = trySellPriceTuple.value;
+    token.nextSellPrice = sellPriceTuple.value0.plus(sellPriceTuple.value1).plus(sellPriceTuple.value2);
+  }
+
   token.save();
 }
 
@@ -69,6 +85,8 @@ export function handleBought(event: Bought): void {
   if (!nft) {
     return;
   }
+
+  nft.updatedAt = event.block.timestamp;
 
   nft.save();
 
