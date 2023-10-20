@@ -91,4 +91,4 @@ templates:
         - event: Sold(indexed address,indexed uint256,uint256,uint256,uint256)
           handler: handleSold
           receipt: true
-      file: ./src/transfers.ts
+      file: ./src/creator-token-purchases.ts

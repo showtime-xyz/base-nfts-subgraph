@@ -27,7 +27,7 @@ function loadNft(
 }
 
 function updateNextPricing(token: CreatorToken): void {
-  let creatorTokenContract = CreatorTokenContract.bind(token.id);
+  let creatorTokenContract = CreatorTokenContract.bind(Address.fromBytes(token.id));
 
   let sellRes = creatorTokenContract.priceToSellNext1();
   let buyRes = creatorTokenContract.priceToBuyNext();
