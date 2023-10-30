@@ -1,11 +1,19 @@
 {
   "base": {
+    "EditionFactory": {
+      "address": "0x966a22b5196413f350859f176EA139a2658c5A8c",
+      "startBlock": 2329836
+    },
     "CreatorTokenFactory": {
       "address": "0x264063408fD1bdC703083AE083c813240A024B7f",
       "startBlock": 10765956
     }
   },
   "base-goerli": {
+    "EditionFactory": {
+      "address": "0x966a22b5196413f350859f176EA139a2658c5A8c",
+      "startBlock": 7555840
+    },
     "CreatorTokenFactory": {
       "address": "0x264063408fD1bdC703083AE083c813240A024B7f",
       "startBlock": 10765956
