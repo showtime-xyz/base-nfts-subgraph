@@ -87,11 +87,11 @@ templates:
       eventHandlers:
         - event: Bought(indexed address,indexed address,indexed uint256,uint256,uint256,uint256)
           handler: handleBought
-          receipt: true
+          receipt: false
         - event: Sold(indexed address,indexed uint256,uint256,uint256,uint256)
           handler: handleSold
-          receipt: true
+          receipt: false
         - event: Transfer(indexed address,indexed address,indexed uint256)
-          handler: handleTransfer
-          receipt: true
+          handler: handleSent
+          receipt: false
       file: ./src/creator-tokens.ts

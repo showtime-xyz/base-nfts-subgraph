@@ -3,11 +3,9 @@ import {
   Bought,
   CreatorToken as CreatorTokenContract,
   Sold,
-  Transfer
+  Transfer,
 } from "../generated/CreatorTokenFactory/CreatorToken";
 import { CreatorToken, CreatorTokenNft } from "../generated/schema";
-
-let NULL_ADDRESS = "0x0000000000000000000000000000000000000000";
 
 function loadNft(
   creatorToken: CreatorToken,
@@ -130,7 +128,7 @@ export function handleSold(event: Sold): void {
   updateNextPricing(token);
 }
 
-export function handleTransfer(event: Transfer): void {
+export function handleSent(event: Transfer): void {
   if (!event.address) {
     log.critical("No contract address in tx {}", [
       event.transaction.hash.toHex()
@@ -166,6 +164,7 @@ export function handleTransfer(event: Transfer): void {
   nft.save();
 
   token.updatedAt = event.block.timestamp;
+  token.save();
   // pricing does not change when transferred
   // updates to pricing will be handled by the above handlers
   // updateNextPricing(token);
