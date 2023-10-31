@@ -28,6 +28,28 @@ dataSources:
         - event: CreatedEdition(indexed uint256,indexed address,address,string)
           handler: handleCreatedEdition
       file: ./src/edition-factory.ts
+  - kind: ethereum
+    name: CreatorTokenFactory
+    network: base
+    source:
+      abi: CreatorTokenFactory
+      address: "0x264063408fD1bdC703083AE083c813240A024B7f"
+      startBlock: 5741609
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - CreatorToken
+      abis:
+        - name: CreatorTokenFactory
+          file: ./abis/CreatorTokenFactory.json
+        - name: CreatorToken
+          file: ./abis/CreatorToken.json
+      eventHandlers:
+        - event: CreatorTokenDeployed(indexed address,indexed address,(string,string,string,address,uint256,uint96,address,uint256,address,address,uint128,uint128,uint128,uint32,bytes32))
+          handler: handleCreatorToken
+      file: ./src/creator-token-factory.ts
 templates:
   - kind: ethereum/contract
     name: Edition
@@ -48,3 +70,29 @@ templates:
           handler: handleTransfer
           receipt: true
       file: ./src/transfers.ts
+  - kind: ethereum/contract
+    name: CreatorTokenNft
+    network: base
+    source:
+      abi: CreatorToken
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - CreatorToken
+        - CreatorTokenNft
+      abis:
+        - name: CreatorToken
+          file: ./abis/CreatorToken.json
+      eventHandlers:
+        - event: Bought(indexed address,indexed address,indexed uint256,uint256,uint256,uint256)
+          handler: handleBought
+          receipt: false
+        - event: Sold(indexed address,indexed uint256,uint256,uint256,uint256)
+          handler: handleSold
+          receipt: false
+        - event: Transfer(indexed address,indexed address,indexed uint256)
+          handler: handleSent
+          receipt: false
+      file: ./src/creator-tokens.ts
