@@ -13,12 +13,12 @@ function loadNft(
   creatorToken: CreatorToken,
   ownerAddress: Address,
   tokenId: BigInt
-): CreatorTokenNft | null {
+): CreatorTokenNft {
   let id = creatorToken.id.toHexString() + "-" + tokenId.toString();
 
   let balance = CreatorTokenNft.load(id);
 
-  if (balance == null) {
+  if (!balance) {
     balance = new CreatorTokenNft(id);
 
     balance.creatorToken = creatorToken.id;
@@ -76,7 +76,7 @@ export function handleBought(event: Bought): void {
     Bytes.fromHexString(tokenAddress.toHexString())
   );
 
-  if (token == null) {
+  if (!token) {
     log.critical("Drop with address {} not found", [
       tokenAddress.toHexString()
     ]);
@@ -91,11 +91,11 @@ export function handleBought(event: Bought): void {
     return;
   }
 
-  nft.updatedAt = event.block.timestamp;
-  nft.save();
-
   token.updatedAt = event.block.timestamp;
   updateNextPricing(token);
+
+  nft.updatedAt = event.block.timestamp;
+  nft.save();
 }
 
 export function handleSold(event: Sold): void {
@@ -113,7 +113,7 @@ export function handleSold(event: Sold): void {
     Bytes.fromHexString(tokenAddress.toHexString())
   );
 
-  if (token == null) {
+  if (!token) {
     log.critical("Drop with address {} not found", [
       tokenAddress.toHexString()
     ]);
@@ -144,7 +144,7 @@ export function handleSent(event: Transfer): void {
 
   if (owner.toHexString() == tokenAddress.toHexString()) {
     log.warning("Skipping because {} sent to token contract", [
-      event.params.from.toHexString(),
+      event.params.from.toHexString()
     ]);
     return;
   }
@@ -153,7 +153,7 @@ export function handleSent(event: Transfer): void {
     Bytes.fromHexString(tokenAddress.toHexString())
   );
 
-  if (token == null) {
+  if (!token) {
     log.critical("Drop with address {} not found", [
       tokenAddress.toHexString()
     ]);
@@ -162,10 +162,10 @@ export function handleSent(event: Transfer): void {
   }
 
   if (owner.toHexString() == NULL_ADDRESS) {
-    log.warning("Deleting because {} sent to receiver {} which is the NULL ADDRESS", [
-      event.params.from.toHexString(),
-      NULL_ADDRESS
-    ]);
+    log.warning(
+      "Deleting because {} sent to receiver {} which is the NULL ADDRESS",
+      [event.params.from.toHexString(), NULL_ADDRESS]
+    );
 
     let tokenId = event.params.tokenId;
     let id = token.id.toHexString() + "-" + tokenId.toString();
@@ -185,9 +185,6 @@ export function handleSent(event: Transfer): void {
 
   nft.updatedAt = event.block.timestamp;
   nft.save();
-
-  token.updatedAt = event.block.timestamp;
-  token.save();
   // pricing does not change when transferred
   // updates to pricing will be handled by the above handlers
   // updateNextPricing(token);

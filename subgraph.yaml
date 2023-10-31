@@ -14,7 +14,7 @@ dataSources:
       apiVersion: 0.0.7
       language: wasm/assemblyscript
       entities:
-        - CreatorTokenDeployed
+        - CreatorToken
       abis:
         - name: CreatorTokenFactory
           file: ./abis/CreatorTokenFactory.json
@@ -35,6 +35,7 @@ templates:
       apiVersion: 0.0.7
       language: wasm/assemblyscript
       entities:
+        - CreatorToken
         - CreatorTokenNft
       abis:
         - name: CreatorToken
