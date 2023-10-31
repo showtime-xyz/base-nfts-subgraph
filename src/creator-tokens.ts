@@ -140,16 +140,6 @@ export function handleSent(event: Transfer): void {
   }
 
   let owner = event.params.to;
-
-  if (owner.toHexString() == NULL_ADDRESS) {
-    log.warning("Skipping because {} sent to receiver {}", [
-      event.params.from.toHexString(),
-      NULL_ADDRESS
-    ]);
-    return;
-  }
-
-
   let tokenAddress = event.address;
 
   if (owner.toHexString() == tokenAddress.toHexString()) {
@@ -168,6 +158,19 @@ export function handleSent(event: Transfer): void {
       tokenAddress.toHexString()
     ]);
 
+    return;
+  }
+
+  if (owner.toHexString() == NULL_ADDRESS) {
+    log.warning("Deleting because {} sent to receiver {} which is the NULL ADDRESS", [
+      event.params.from.toHexString(),
+      NULL_ADDRESS
+    ]);
+
+    let tokenId = event.params.tokenId;
+    let id = token.id.toHexString() + "-" + tokenId.toString();
+
+    store.remove("CreatorTokenNft", id);
     return;
   }
 
