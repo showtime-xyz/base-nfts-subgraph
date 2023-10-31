@@ -4,7 +4,7 @@ schema:
 dataSources:
   - kind: ethereum
     name: EditionFactory
-    network: base-goerli
+    network: base
     source:
       abi: EditionFactory
       address: "0x966a22b5196413f350859f176EA139a2658c5A8c"
@@ -30,11 +30,11 @@ dataSources:
       file: ./src/edition-factory.ts
   - kind: ethereum
     name: CreatorTokenFactory
-    network: base-goerli
+    network: base
     source:
       abi: CreatorTokenFactory
       address: "0x264063408fD1bdC703083AE083c813240A024B7f"
-      startBlock: 10765956
+      startBlock: 5741609
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -53,7 +53,7 @@ dataSources:
 templates:
   - kind: ethereum/contract
     name: Edition
-    network: base-goerli
+    network: base
     source:
       abi: Edition
     mapping:
@@ -72,7 +72,7 @@ templates:
       file: ./src/transfers.ts
   - kind: ethereum/contract
     name: CreatorTokenNft
-    network: base-goerli
+    network: base
     source:
       abi: CreatorToken
     mapping:
