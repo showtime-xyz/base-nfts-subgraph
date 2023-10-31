@@ -3,9 +3,11 @@ import {
   Bought,
   CreatorToken as CreatorTokenContract,
   Sold,
-  Transfer,
+  Transfer
 } from "../generated/CreatorTokenFactory/CreatorToken";
 import { CreatorToken, CreatorTokenNft } from "../generated/schema";
+
+let NULL_ADDRESS = "0x0000000000000000000000000000000000000000";
 
 function loadNft(
   creatorToken: CreatorToken,
@@ -138,7 +140,25 @@ export function handleSent(event: Transfer): void {
   }
 
   let owner = event.params.to;
+
+  if (owner.toHexString() == NULL_ADDRESS) {
+    log.warning("Skipping because {} sent to receiver {}", [
+      event.params.from.toHexString(),
+      NULL_ADDRESS
+    ]);
+    return;
+  }
+
+
   let tokenAddress = event.address;
+
+  if (owner.toHexString() == tokenAddress.toHexString()) {
+    log.warning("Skipping because {} sent to token contract", [
+      event.params.from.toHexString(),
+    ]);
+    return;
+  }
+
   let token = CreatorToken.load(
     Bytes.fromHexString(tokenAddress.toHexString())
   );
