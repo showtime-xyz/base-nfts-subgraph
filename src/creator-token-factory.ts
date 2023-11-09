@@ -13,6 +13,7 @@ export default function handleCreatorToken(event: CreatorTokenDeployed): void {
   entity.creator = event.params.config.creator;
   entity.createdAt = event.block.timestamp;
   entity.updatedAt = event.block.timestamp;
+  entity.totalCreatorEarningsUSDC = BigInt.zero();
 
   entity.name = creatorToken.name();
   entity.metadataUrl = creatorToken.tokenURI(BigInt.zero());
