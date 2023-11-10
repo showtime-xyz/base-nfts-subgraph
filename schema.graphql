@@ -39,6 +39,7 @@ type CreatorToken @entity(immutable: false) {
   metadataUrl: String
   nextBuyPrice: BigInt
   nextSellPrice: BigInt
+  totalCreatorEarningsUSDC: BigInt!
 
   nfts: [CreatorTokenNft!]! @derivedFrom(field: "creatorToken")
 }

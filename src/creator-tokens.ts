@@ -92,6 +92,9 @@ export function handleBought(event: Bought): void {
   }
 
   token.updatedAt = event.block.timestamp;
+  token.totalCreatorEarningsUSDC = token.totalCreatorEarningsUSDC.plus(
+    event.params.creatorFee
+  );
   updateNextPricing(token);
 
   nft.updatedAt = event.block.timestamp;
@@ -127,6 +130,9 @@ export function handleSold(event: Sold): void {
   store.remove("CreatorTokenNft", id);
 
   token.updatedAt = event.block.timestamp;
+  token.totalCreatorEarningsUSDC = token.totalCreatorEarningsUSDC.plus(
+    event.params.creatorFee
+  );
   updateNextPricing(token);
 }
 
