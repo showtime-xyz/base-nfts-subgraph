@@ -4,11 +4,11 @@ schema:
 dataSources:
   - kind: ethereum
     name: CreatorTokenFactory
-    network: base-sepolia
+    network: base-goerli
     source:
       abi: CreatorTokenFactory
       address: "0xDac3fdC838044a950B64dd8d985163c335C50c56"
-      startBlock: 5007686
+      startBlock: 15296013
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -27,7 +27,7 @@ dataSources:
 templates:
   - kind: ethereum/contract
     name: CreatorTokenNft
-    network: base-sepolia
+    network: base-goerli
     source:
       abi: CreatorToken
     mapping:
