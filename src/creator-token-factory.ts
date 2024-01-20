@@ -11,6 +11,7 @@ export default function handleCreatorToken(event: CreatorTokenDeployed): void {
 
   let entity = new CreatorToken(tokenAddress);
   entity.creator = event.params.config.creator;
+  entity.admin = event.params.config.admin;
   entity.createdAt = event.block.timestamp;
   entity.updatedAt = event.block.timestamp;
   entity.totalCreatorEarningsUSDC = BigInt.zero();
