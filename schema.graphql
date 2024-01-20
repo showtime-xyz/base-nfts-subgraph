@@ -1,40 +1,11 @@
-type FreeNFTDrop @entity(immutable: true) {
-  "a Free NFT Drop is an ERC721 contract, we use the contract address as the id"
-  id: Bytes!
-
-  creator: Bytes! # address
-  createdAt: BigInt! # block timestamp
-  deadline: BigInt! # uint256
-  editionSize: BigInt! # uint256
-  name: String
-  description: String
-  animationUrl: String
-  imageUrl: String
-  
-  balances: [FreeNFTBalance!]! @derivedFrom(field: "drop")
-}
-
-
-type FreeNFTBalance @entity(immutable: false) {
-  "The id is <drop address>-<owner address>"
-  id: String! # address
-
-  address: Bytes! # owner address
-  quantity: BigInt! # amount of token that `address` owns
-  drop: FreeNFTDrop!
-
-  updatedAt: BigInt! # block timestamp
-}
-
-
 type CreatorToken @entity(immutable: false) {
   "a creator token is an nft for a creator that can be bought or sold with a deterministic price that follows a bonding curve"
   id: Bytes!
 
   creator: Bytes! # address
+  admin: Bytes! # address
   createdAt: BigInt! # block timestamp
   updatedAt: BigInt! # block timestamp
-
   name: String
   metadataUrl: String
   nextBuyPrice: BigInt
@@ -43,7 +14,6 @@ type CreatorToken @entity(immutable: false) {
 
   nfts: [CreatorTokenNft!]! @derivedFrom(field: "creatorToken")
 }
-
 
 type CreatorTokenNft @entity(immutable: false) {
   "a creator token is an nft for a creator that can be bought or sold with a deterministic price that follows a bonding curve"
