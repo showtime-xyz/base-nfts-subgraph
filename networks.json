@@ -1,8 +1,8 @@
 {
-  "base-goerli": {
+  "base-sepolia": {
     "CreatorTokenFactory": {
-      "address": "0xb4012E07568FB7086F4EFdd11A4cA9a69110800C",
-      "startBlock": 15296013
+      "address": "0xDac3fdC838044a950B64dd8d985163c335C50c56",
+      "startBlock": 6040817
     }
   }
 }

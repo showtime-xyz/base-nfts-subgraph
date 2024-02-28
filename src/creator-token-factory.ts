@@ -16,6 +16,14 @@ export default function handleCreatorToken(event: CreatorTokenDeployed): void {
   entity.updatedAt = event.block.timestamp;
   entity.totalCreatorEarningsUSDC = BigInt.zero();
 
+  entity.symbol = event.params.config.symbol;
+  entity.creatorFeeBps = event.params.config.creatorFee;
+  entity.adminFeeBps = event.params.config.adminFee;
+  entity.royaltyBps = event.params.config.creatorRoyalty;
+  entity.payToken = event.params.config.payToken;
+  entity.referrer = event.params.config.referrer;
+
+
   entity.name = creatorToken.name();
   entity.metadataUrl = creatorToken.tokenURI(BigInt.zero());
 
