@@ -3,38 +3,12 @@ schema:
   file: ./schema.graphql
 dataSources:
   - kind: ethereum
-    name: EditionFactory
-    network: base
-    source:
-      abi: EditionFactory
-      address: "0x966a22b5196413f350859f176EA139a2658c5A8c"
-      startBlock: 2329836
-    mapping:
-      kind: ethereum/events
-      apiVersion: 0.0.7
-      language: wasm/assemblyscript
-      entities:
-        - CreatedEdition
-      abis:
-        - name: EditionFactory
-          file: ./abis/EditionFactory.json
-        - name: Edition
-          file: ./abis/Edition.json
-        - name: MultiBatchEdition
-          file: ./abis/MultiBatchEdition.json
-        - name: SingleBatchEdition
-          file: ./abis/SingleBatchEdition.json
-      eventHandlers:
-        - event: CreatedEdition(indexed uint256,indexed address,address,string)
-          handler: handleCreatedEdition
-      file: ./src/edition-factory.ts
-  - kind: ethereum
     name: CreatorTokenFactory
     network: base
     source:
       abi: CreatorTokenFactory
-      address: "0xf0eDA9196f34B448eFa3f16eeBD1a60965C64Ff7"
-      startBlock: 5741608
+      address: "0xf882E09c77c652C3a21a0Bb5f35cf342CbD0f6D2"
+      startBlock: 11147406
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -47,29 +21,10 @@ dataSources:
         - name: CreatorToken
           file: ./abis/CreatorToken.json
       eventHandlers:
-        - event: CreatorTokenDeployed(indexed address,indexed address,(string,string,string,address,uint256,uint96,address,uint256,address,address,uint128,uint128,uint128,uint32,bytes32))
+        - event: CreatorTokenDeployed(indexed address,indexed address,(string,string,string,address,uint256,uint96,address,uint256,address,address,uint128,uint128,uint128,uint32))
           handler: handleCreatorToken
       file: ./src/creator-token-factory.ts
 templates:
-  - kind: ethereum/contract
-    name: Edition
-    network: base
-    source:
-      abi: Edition
-    mapping:
-      kind: ethereum/events
-      apiVersion: 0.0.7
-      language: wasm/assemblyscript
-      entities:
-        - FreeNFTBalance
-      abis:
-        - name: Edition
-          file: ./abis/Edition.json
-      eventHandlers:
-        - event: Transfer(indexed address,indexed address,indexed uint256)
-          handler: handleTransfer
-          receipt: true
-      file: ./src/transfers.ts
   - kind: ethereum/contract
     name: CreatorTokenNft
     network: base
